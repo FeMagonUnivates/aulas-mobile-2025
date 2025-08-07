@@ -9,7 +9,7 @@ export default function App() {
         alignItems: "center",
       }}
     >
-      <Text>op</Text>
+      <Text>opa</Text>
     </View>
   );
 }
