@@ -5,9 +5,31 @@ export default function App() {
   return (
     <SafeAreaView style={estilos.tela}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          style={estilos.centralizado}>
-          <Text>Universal React with Expo</Text>
+        <View style={[estilos.centralizado, 
+        {
+          width: '100%',
+          height: 80
+        }]}>
+          <Text style= {{ width: '80%', alignItems: "flex-start"}}>Menu</Text>
+          <View style={{
+            width: '80%',
+            flexDirection: 'row',
+            justifyContent: "space-between"
+          }}>
+            <View style={{
+              backgroundColor: 'black',
+              justifyContent: "center",
+              alignItems: "center"
+            }}>
+              <Text style={{
+                fontSize: 18, 
+                width: 100,  
+                padding: 6, 
+                backgroundColor: 'lightblue'}}>Notas</Text>
+            </View>
+            <Text style={{backgroundColor: 'lightblue'}}>Aulas</Text>
+            <Text style={{backgroundColor: 'lightblue'}}>Avisos</Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -17,8 +39,8 @@ export default function App() {
 const estilos = StyleSheet.create({
   tela: {
     flex: 1,
-    padding: 16,
-    backgroundColor: "#fff",
+    padding: 15,
+    backgroundColor: "#fff"
   },
   titulo: {
     fontWeight: "1000",
