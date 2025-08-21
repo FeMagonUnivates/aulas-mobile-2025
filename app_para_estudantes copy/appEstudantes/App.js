@@ -15,12 +15,12 @@ export default function App() {
       <View>
         <Text style={[estilos.menuTitulo,]}>Menu</Text>
         <View style={estilos.menuBotao}>
-          <Button color={"black"} title="Butão 1" />
+          <Button title="Butão 1" />
           <Button title="Butão 2" />
           <Button title="Butão 3" />
         </View>
       </View>
-      <ScrollView>
+      <ScrollView style={estilos.lista}>
         <View style={estilos.cartoes}>
           <Text style={estilos.negrito}>Card 1</Text>
           <Text>Card 1</Text>
@@ -33,12 +33,20 @@ export default function App() {
           <Text style={estilos.negrito}>Card 1</Text>
           <Text>Card 1</Text>
         </View>
-        <Text style={estilos.negrito}>Chamada para ação</Text>
-        <View>
-          <Text>Adquira um novo curso aqui</Text>
-          <Button title="Comprar"/>
+        <View style={estilos.cartoes}>
+          <Text style={estilos.negrito}>Card 1</Text>
+          <Text>Card 1</Text>
+        </View>
+        <View style={estilos.cartoes}>
+          <Text style={estilos.negrito}>Card 1</Text>
+          <Text>Card 1</Text>
         </View>
       </ScrollView>
+      <Text style={estilos.negrito}>Chamada para ação</Text>
+      <View style={estilos.chamadaAcao}>
+        <Text>Compre o curso</Text>
+        <Button color={'green'} title="Comprar"></Button>
+      </View>
     </SafeAreaView>
   );
 }
@@ -46,7 +54,6 @@ export default function App() {
 const estilos = StyleSheet.create({
   areaSegura: {
     margin: 5,
-    flex: 1
   },
   avatar: {
     width: 50,
@@ -77,13 +84,32 @@ const estilos = StyleSheet.create({
   },
   menuBotao: {
     flexDirection: "row",
-    justifyContent: "space-around"
+    justifyContent: "space-around",
+    marginBottom: 20
+  },
+  bordaBotao: {
+    borderWidth: 2,
+    borderColor: 'black',
+    borderRadius: '10%'
   },
   cartoes: {
+    justifyContent: "center",
     height: 80,
-    borderRadius: 10,
-    backgroundColor: 'lightblue',
+    borderRadius: 20,
+    backgroundColor: "#f1b1b1ff",
     marginBottom: 10,
     padding: 20
   },
+  lista: {
+    height: 300
+  },
+  chamadaAcao: {
+    marginTop: 10,
+    borderColor: "#000",
+    borderWidth: 1,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 100
+  }
 });
