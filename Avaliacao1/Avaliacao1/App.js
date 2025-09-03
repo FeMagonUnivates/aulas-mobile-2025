@@ -5,12 +5,12 @@ import { VirtualizedList } from "react-native-web";
 export default function App() {
   return (
     <SafeAreaView style={estilos.areaSegura}>
+      <View style={{ marginBottom: 2 }}>
+        <Text style={estilos.titulo}>React Native</Text>
+        <Text>Avaliação dia 27/08</Text>
+      </View>
       <ScrollView showsHorizontalScrollIndicator={false}>
-        <View style={{marginBottom: 2}}>
-          <Text style={estilos.titulo}>React Native</Text>
-          <Text>Avaliação dia 27/08</Text>
-        </View>
-        <View style={[estilos.centralizar, {height: 700}]}>
+        <View style={[estilos.centralizar, { height: 700 }]}>
           <View style={estilos.textoBatatas}>
             <Text style={estilos.negrito}>Batatas são macias.</Text>
           </View>
