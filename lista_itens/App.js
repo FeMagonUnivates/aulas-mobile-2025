@@ -1,78 +1,66 @@
-import { View, Text, StyleSheet, Button, TextInput, FlatList } from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { View, TextInput, Button, FlatList, Text, StyleSheet } from "react-native";
 
 export default function App() {
-
   const [texto, setTexto] = useState("");
-  const [id, setId] = useState("");
   const [lista, setLista] = useState([]);
+  const [proximoId, setProximoId] = useState(1);
 
-  const adicionarNaLista = () => {
-    if (texto.trim() === "") return;
-    if (id.trim() === "") return;
-    setLista([...lista, { id: id, valor: texto }]);
+  function handleAdicionarItem() {
+    const novoItem = { id: proximoId, value: texto };
+
+    // adiciona ao final da lista
+    const listaAtualizada = lista.concat(novoItem);
+    setLista(listaAtualizada);
+
+    // prepara o próximo id
+    setProximoId(proximoId + 1);
+
+    // limpa o campo
     setTexto("");
-    setId("");
-  };
+  }
+
 
   return (
-    <SafeAreaView style={estilos.areaSegura}>
-      <View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.inputContainer}>
         <TextInput
-          style={estilos.campo}
-          placeholder="Digite o ID"
-          value={id}
-          onChangeText={setId}
-        />
-        <TextInput
-          style={estilos.campo}
-          placeholder="Digite algo"
+          style={styles.input}
+          placeholder="Digite um item..."
           value={texto}
-          onChangeText={setTexto}
+          onChangeText={setTexto} // atualiza o estado texto a cada letra digitada
         />
-
-        <View style={estilos.margemBotoes}>
-          <View style={estilos.botao}>
-            <Button title="Adicionar" onPress={adicionarNaLista} />
-          </View>
-        </View>
-
-        <FlatList
-          data={lista}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <Text>ID: {item.id}, Algo: {item.texto}</Text>
-          )}
-        />
+        <Button title="Adicionar" onPress={handleAdicionarItem} />
       </View>
+
+      {/* lista que mostra os itens adicionados */}
+      <FlatList
+        data={lista}
+        renderItem={({ item }) => (
+          <Text>{item.value}</Text>
+        )}
+      />
     </SafeAreaView>
   );
 }
 
-
-const estilos = StyleSheet.create({
-  areaSegura: {
+const styles = StyleSheet.create({
+  container: {
     flex: 1,
-    margin: 10
+    paddingTop: 40,
+    paddingHorizontal: 20,
   },
-  campo: {
-    height: 40,
+  inputContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  input: {
+    flex: 1,
     borderWidth: 1,
+    borderColor: "#cccccc",
     borderRadius: 5,
-    paddingLeft: 10,
-    marginTop: 20
-  },
-  botao: {
-    width: 'auto',
-    height: 70,
-    backgroundColor: '#e4e4e4ff',
-    borderRadius: 5,
-    justifyContent: 'center',
-  },
-  margemBotoes: {
-    width:'100%',
-    marginTop: 10,
-    alignItems: 'center'
+    padding: 10,
+    marginRight: 10,
   },
 });
