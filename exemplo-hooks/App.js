@@ -29,7 +29,7 @@ export default function App() {
   function dividir(n1, n2) {
     const n1Convertido = parseFloat(n1);
     const n2Convertido = parseFloat(n2);
-    if(n2Convertido == 0){
+    if (n2Convertido == 0) {
       return "Divisão por 0"
     }
     const dividir = n1Convertido / n2Convertido;
