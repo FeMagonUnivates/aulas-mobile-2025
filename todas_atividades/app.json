@@ -1,0 +1,9 @@
+{
+  "name": "todas_atividades",
+  "slug": "todas_atividades",
+  "plugins": [
+    "expo-router",
+    "expo-sqlite"
+  ],
+  "scheme": "your-app-scheme"
+}
