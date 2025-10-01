@@ -18,6 +18,10 @@ function getDespesas() {
     return db.getAllSync('SELECT * FROM despesas ORDER BY id DESC');
 }
 
+function deletarDespesa(id) {
+    db.runSync('DELETE FROM despesas WHERE id = ?', [id]);
+}
+
 function insertDespesas(descricao, valor) {
     const valorNum = parseFloat(valor.replace(',', '.')) || 0;
     db.runSync('INSERT INTO despesas (descricao, valor) VALUES (?, ?)', [descricao, valorNum]);
@@ -27,10 +31,6 @@ export default function Sqlite() {
     const [texto, setTexto] = useState("");
     const [num, setNum] = useState("");
     const [despesas, setDespesas] = useState([]);
-
-    useEffect(() => {
-        carregarDespesas();
-    }, []);
 
     function carregarDespesas() {
         setDespesas(getDespesas());
@@ -52,6 +52,11 @@ export default function Sqlite() {
 
         Keyboard.dismiss();
 
+        carregarDespesas();
+    }
+
+    function excluirDespesa(id){
+        deletarDespesa(id);
         carregarDespesas();
     }
 
@@ -77,9 +82,16 @@ export default function Sqlite() {
 
                 <Button
                     title="Salvar"
-                    onPress={salvarDespesas} 
+                    onPress={salvarDespesas}
                 />
 
+            </View>
+
+            <View>
+                <Button
+                    title="Voltar para tela inicial"
+                    onPress={() => router.replace("/")}
+                />
             </View>
 
             <FlatList
@@ -89,16 +101,11 @@ export default function Sqlite() {
                     <View>
                         <Text>{item.descricao}</Text>
                         <Text>R$ {item.valor.toFixed(2)}</Text>
+                        <Button title="x" color="#b91c1c" onPress={() => excluirDespesa(item.id)} />
                     </View>
                 )}
             />
 
-            <View>
-                <Button 
-                    title="Voltar para tela inicial" 
-                    onPress={() => router.replace("/")} 
-                />
-            </View>
 
         </SafeAreaView>
     );
