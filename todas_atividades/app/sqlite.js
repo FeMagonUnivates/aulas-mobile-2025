@@ -1,5 +1,5 @@
-import { View, Text, Button, StyleSheet, FlatList, TextInput } from "react-native";
-import { useState } from "react";
+import { View, Text, Button, StyleSheet, FlatList, TextInput, Keyboard } from "react-native";
+import { useState, useEffect } from "react";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SQLite from 'expo-sqlite';
@@ -15,27 +15,44 @@ db.execSync(`
 `);
 
 function getDespesas() {
-    return db.getAllSync('SELECT * FROM DESPESAS');
+    return db.getAllSync('SELECT * FROM despesas ORDER BY id DESC');
 }
 
-function insertDespesa() {
-    db.runSync('INSERT INTO despesas (descricao, valor) VALUES (?, ?)', [descricao, valor]);
+function insertDespesas(descricao, valor) {
+    const valorNum = parseFloat(valor.replace(',', '.')) || 0;
+    db.runSync('INSERT INTO despesas (descricao, valor) VALUES (?, ?)', [descricao, valorNum]);
 }
 
-export default function sqlite() {
+export default function Sqlite() {
     const [texto, setTexto] = useState("");
-    const [valor, setValor] = useState("");
+    const [num, setNum] = useState("");
     const [despesas, setDespesas] = useState([]);
 
-    function salvarDespesa() {
-        const descricao = texto.trim();
-        if (!descricao) return;
-        insertDespesa(descricao);
-        setTexto("");
-    }
+    useEffect(() => {
+        carregarDespesas();
+    }, []);
 
     function carregarDespesas() {
         setDespesas(getDespesas());
+    }
+
+    function salvarDespesas() {
+        const desc = texto.trim();
+        const val = num.trim();
+
+        if (!desc || !val) {
+            alert("Por favor, preencha a descrição e o valor.");
+            return;
+        }
+
+        insertDespesas(desc, val);
+
+        setTexto("");
+        setNum("");
+
+        Keyboard.dismiss();
+
+        carregarDespesas();
     }
 
     return (
@@ -43,7 +60,6 @@ export default function sqlite() {
             <Text>Despesas Diárias</Text>
             <View>
                 <View>
-                    <Text>Despesa</Text>
                     <TextInput
                         value={texto}
                         onChangeText={setTexto}
@@ -51,26 +67,37 @@ export default function sqlite() {
                     />
                 </View>
                 <View>
-                    <Text>Valor</Text>
                     <TextInput
-                        value={texto}
-                        onChangeText={setValor}
+                        value={num}
+                        onChangeText={setNum}
+                        keyboardType="numeric"
                         placeholder="Valor..."
                     />
                 </View>
 
-                <Button title="Salvar" onPress={salvarDespesa} />
+                <Button
+                    title="Salvar"
+                    onPress={salvarDespesas} 
+                />
 
             </View>
 
             <FlatList
                 data={despesas}
                 keyExtractor={(item) => String(item.id)}
-                renderItem={({ item }) => <Text>- {item}</Text>}
+                renderItem={({ item }) => (
+                    <View>
+                        <Text>{item.descricao}</Text>
+                        <Text>R$ {item.valor.toFixed(2)}</Text>
+                    </View>
+                )}
             />
 
             <View>
-                <Button title="Voltar para tela inicial" onPress={() => router.replace("/")} />
+                <Button 
+                    title="Voltar para tela inicial" 
+                    onPress={() => router.replace("/")} 
+                />
             </View>
 
         </SafeAreaView>
