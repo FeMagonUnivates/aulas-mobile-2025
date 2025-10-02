@@ -1,8 +1,0 @@
-{
-  "name": "telas_e_abas",
-  "slug": "telas_e_abas",
-  "plugins": [
-    "expo-router"
-  ],
-  "scheme": "telas_e_abas"
-}

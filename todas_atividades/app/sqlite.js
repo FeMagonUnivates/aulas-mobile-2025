@@ -1,10 +1,11 @@
 import { View, Text, Button, StyleSheet, FlatList, TextInput, Keyboard } from "react-native";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabaseSync('despesas.db');
+
 db.execSync(`
     PRAGMA journal_mode = WAL;
     CREATE TABLE IF NOT EXISTS despesas (
