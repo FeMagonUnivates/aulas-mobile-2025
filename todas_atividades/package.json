@@ -22,5 +22,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
-  "main": "expo-router/entry"
+  "main": "expo-router/entry",
+  "devDependencies": {
+    "@react-native-community/cli": "^20.0.2"
+  }
 }
