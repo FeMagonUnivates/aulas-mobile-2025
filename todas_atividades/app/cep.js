@@ -1,6 +1,7 @@
-import { SafeAreaView} from "react-native-safe-area-context";
-import {  View, Button, StyleSheet, Text, TextInput, Image, Keyboard } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Button, StyleSheet, Text, TextInput, Image, Keyboard } from "react-native";
 import { useState, useEffect } from "react";
+import { router } from "expo-router";
 
 async function getCep(cepBusca) {
     const resposta = await fetch(`https://brasilapi.com.br/api/cep/v1/${cepBusca}`);
@@ -42,9 +43,14 @@ export default function Cep() {
                 placeholder="Digite o CEP (ex: 12345678)"
             />
 
-            <Button 
-                title="Pesquisar" 
+            <Button
+                title="Pesquisar"
                 onPress={carregarCep}
+            />
+
+            <Button
+                title="Voltar para tela inicial"
+                onPress={() => router.replace("/")}
             />
 
             <View style={estilos.caixaResposta}>
@@ -69,8 +75,8 @@ const estilos = StyleSheet.create({
     caixaTitulo: {
         alignItems: 'center',
         marginVertical: 10,
-    },      
-    
+    },
+
     caixaResposta: {
         height: 150,
         justifyContent: 'space-around'
@@ -82,11 +88,11 @@ const estilos = StyleSheet.create({
         borderRadius: 4,
         paddingLeft: 5,
     },
-    
+
     titulo: {
         fontSize: 22,
         fontWeight: 'bold'
-    },      
+    },
 
     caixaInput: {
         backgroundColor: '#fff',

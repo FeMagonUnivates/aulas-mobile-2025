@@ -13,6 +13,7 @@ export default function Index() {
                 <Button title="Ir para Quadro de tarefas" onPress={() => router.replace("/Quadro_tarefas")} />
                 <Button title="Ir para Despesas Diárias(SQLite)" onPress={() => router.replace("/sqlite")} />
                 <Button title="Ir para Consultar CEP" onPress={() => router.replace("/cep")} />
+                <Button title="Ir para Cadastro API" onPress={() => router.replace("/CadastroAPI")} />
             </ScrollView>
         </SafeAreaView>
     )
