@@ -3,7 +3,7 @@ import { View, Button, StyleSheet, Text, TextInput, Image, Keyboard, FlatList } 
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
 
-async function buscaCadastros() {
+async function getCadastros() {
     const resposta = await fetch(`http://177.44.248.50:8080/items`);
     if (resposta.ok) {
         const payload = await resposta.json();
@@ -20,14 +20,37 @@ async function cadastra(name, description, price) {
     });
 }
 
+async function deleta(id) {
+    const resposta = await fetch(`http://177.44.248.50:8080/items/${id}`, {
+        method: 'DELETE'
+    });
+}
+
+async function getCadastroById(id) {
+    const resposta = await fetch(`http://177.44.248.50:8080/items/${id}`,)
+    if (resposta.ok) {
+        const payload = await resposta.json();
+        return payload;
+    }
+}
+
+async function atualizar(id, name, description, price) {
+    const resposta = await fetch(`http://177.44.248.50:8080/items/${id}`, {
+        method: 'PUT',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, description, price })
+    });
+}
+
 export default function cadastroApi() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [cadastros, setCadastros] = useState([]);
+    const [editandoId, setEditandoId] = useState(null);
 
     async function carregarCadastros() {
-        const lista = await buscaCadastros();
+        const lista = await getCadastros();
         setCadastros(lista);
     }
 
@@ -46,6 +69,40 @@ export default function cadastroApi() {
         setName("");
         setDescription("");
         setPrice("");
+        carregarCadastros();
+
+        Keyboard.dismiss();
+    }
+
+    async function deletarCadastro(id) {
+        await deleta(id);
+        carregarCadastros();
+    }
+
+    async function editarCadastro(id) {
+        const cadastroTemp = await getCadastroById(id);
+
+        if (!cadastroTemp) return;
+
+        setName(cadastroTemp.name);
+        setDescription(cadastroTemp.description);
+        setPrice(String(cadastroTemp.price));
+        setEditandoId(id);
+    }
+
+    async function atualizarCadastro() {
+        const nameTemp = name.trim();
+        const descriptionTemp = description.trim();
+        const priceTemp = price.trim();
+
+        if (!name || !price || !editandoId) return;
+
+        await atualizar(editandoId, nameTemp, descriptionTemp, Number(priceTemp));
+
+        setName("");
+        setDescription("");
+        setPrice("");
+        setEditandoId(null)
         carregarCadastros();
 
         Keyboard.dismiss();
@@ -82,9 +139,22 @@ export default function cadastroApi() {
                 style={estilos.input}
             />
 
-            <Button title="Salvar" onPress={salvar} />
+            <Button
+                title="Salvar"
+                onPress={salvar}
+                disabled={!!editandoId}
+            />
 
-            <Button title="Voltar para tela inicial" onPress={() => router.replace("/")} />
+            <Button
+                title="Atualizar"
+                onPress={atualizarCadastro}
+                disabled={!editandoId}
+            />
+
+            <Button
+                title="Voltar para tela inicial"
+                onPress={() => router.replace("/")}
+            />
 
             <FlatList
                 data={cadastros}
@@ -94,6 +164,20 @@ export default function cadastroApi() {
                         <Text style={estilos.textoItem}>Nome: {item.name}</Text>
                         <Text>Descrição: {item.description}</Text>
                         <Text>Preço: R$ {item.price}</Text>
+                        <View style={estilos.botaoExcluir}>
+                            <Button
+                                title="Excluir"
+                                color={"white"}
+                                onPress={() => deletarCadastro(item.id)}
+                            />
+                        </View>
+                        <View style={estilos.botaoEditar}>
+                            <Button
+                                title="Editar"
+                                color={"white"}
+                                onPress={() => editarCadastro(item.id)}
+                            />
+                        </View>
                     </View>
                 )}
             />
@@ -107,12 +191,14 @@ const estilos = StyleSheet.create({
         flex: 1,
         padding: 5,
     },
+
     titulo: {
         fontSize: 22,
         fontWeight: "bold",
         marginBottom: 10,
         textAlign: "center",
     },
+
     input: {
         backgroundColor: "#fff",
         borderWidth: 1,
@@ -121,11 +207,13 @@ const estilos = StyleSheet.create({
         padding: 8,
         marginBottom: 8,
     },
+
     botoes: {
         flexDirection: "row",
         justifyContent: "space-around",
         marginVertical: 10,
     },
+
     item: {
         backgroundColor: "#fff",
         borderWidth: 1,
@@ -134,7 +222,24 @@ const estilos = StyleSheet.create({
         padding: 10,
         marginBottom: 8,
     },
+
     textoItem: {
         fontWeight: "bold",
+    },
+
+    botaoExcluir: {
+        marginTop: 5,
+        backgroundColor: '#EF4444',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 8,
+    },
+
+    botaoEditar: {
+        marginTop: 5,
+        backgroundColor: '#447aefff',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 8,
     },
 });
